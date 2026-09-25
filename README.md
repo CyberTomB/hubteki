@@ -1,6 +1,6 @@
-# .
+# Play Hubworld: Aidalon in the Browser!
 
-This template should help get you started developing with Vue 3 in Vite.
+This repository is currently a WIP. This project is in no way associated with Earthborn Games. This is an unofficial fan-created implementation of the upcoming card game Hubworld: Aidalon. Art, rules text, and all copyrighted materials belong to their rights holders.
 
 ## Recommended IDE Setup
 
