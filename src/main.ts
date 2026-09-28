@@ -9,4 +9,17 @@ const app = createApp(App)
 app.use(createPinia())
 app.use(router)
 
+// Confirming server connection
+
+async function confirmServerConnection() {
+  console.log('checking for server...')
+  fetch('http://localhost:3000/index')
+    .then((res) => res.json())
+    .then((data) => {
+      console.log('this was received: ', data)
+    })
+}
+
+confirmServerConnection()
+
 app.mount('#app')
