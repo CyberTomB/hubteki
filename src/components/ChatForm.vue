@@ -7,19 +7,19 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import { io } from 'socket.io-client'
 
-let username = ''
-let message = ''
+const username = ref('')
+const message = ref('')
 // TODO fetch url from env
 const socket = io('http://localhost:3000')
 
 function sendMessage() {
-  console.log('button pressed: ', message, username)
-  if (message && username) {
+  if (message.value && username.value) {
     console.log('activating socket', socket)
-    socket.emit('send message', { username: username, content: message })
-    message = ''
+    socket.emit('send message', { username: username.value, content: message.value })
+    message.value = ''
   }
 }
 </script>
