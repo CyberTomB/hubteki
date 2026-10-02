@@ -1,11 +1,5 @@
-<script setup lang="ts">
-import ChatForm from './components/ChatForm.vue'
-import ChatMessage from './components/ChatMessage.vue'
-</script>
+<script setup lang="ts"></script>
 
-<template>
-  <ChatMessage></ChatMessage>
-  <ChatForm></ChatForm>
-</template>
+<template></template>
 
 <style scoped></style>
