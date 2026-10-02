@@ -13,10 +13,10 @@ app.use(router)
 
 async function confirmServerConnection() {
   console.log('checking for server...')
-  fetch('http://localhost:3000/index')
+  fetch('http://localhost:3000/')
     .then((res) => res.json())
     .then((data) => {
-      console.log('this was received: ', data)
+      console.log('Server connection established', data)
     })
 }
 

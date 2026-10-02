@@ -16,6 +16,7 @@
     "format": "prettier --write --experimental-cli src/"
   },
   "dependencies": {
+    "axios": "^1.20.0",
     "pinia": "^4.0.3",
     "socket.io-client": "^4.8.4",
     "vue": "^3.5.42",
