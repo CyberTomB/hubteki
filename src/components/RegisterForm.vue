@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useAuthStore } from '@/stores/auth'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
@@ -9,7 +10,7 @@ const confirmPassword = ref('')
 const errorMessage = ref('')
 const isSubmitting = ref(false)
 
-// const auth = useAuthStore();
+const auth = useAuthStore()
 const router = useRouter()
 
 const passwordsMatch = computed(() => password.value === confirmPassword.value)
@@ -28,6 +29,8 @@ async function handleSubmit() {
   isSubmitting.value = true
   try {
     // register
+    console.log('registering')
+    await auth.register({ email: email.value, password: password.value, name: name.value })
     router.push({ name: 'home' })
   } catch (error: any) {
     errorMessage.value = error.response?.data?.message || 'Registration failed, try again.'
@@ -38,6 +41,7 @@ async function handleSubmit() {
 </script>
 
 <template>
+  <p>This is the Registration Page</p>
   <form @submit.prevent="handleSubmit">
     <label for="name">Name</label>
     <input id="name" v-model="name" type="text" required autocomplete="name" />

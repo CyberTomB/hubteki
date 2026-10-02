@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useAuthStore } from '@/stores/auth'
 import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -7,7 +8,7 @@ const password = ref('')
 const errorMessage = ref('')
 const isSubmitting = ref(false)
 
-// const auth = useAuthStore();
+const auth = useAuthStore()
 const router = useRouter()
 const route = useRoute()
 
@@ -16,6 +17,8 @@ async function handleSubmit() {
   isSubmitting.value = true
   try {
     // login
+    console.log('redirecting', { e: errorMessage.value, s: isSubmitting.value })
+    await auth.login({ email: email.value, password: password.value })
     router.push((route.query.redirect as string) || { name: 'home' })
   } catch (error: any) {
     errorMessage.value = error.response?.data?.message || 'Something went wrong, try again.'

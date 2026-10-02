@@ -24,6 +24,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function login(payload: { email: string; password: string }) {
+    console.log('sending request to server: ', payload)
     const { data } = await api.post('/login', payload)
     setSession(data.accessToken, data.user)
   }
