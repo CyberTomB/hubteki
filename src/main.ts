@@ -3,6 +3,7 @@ import { createPinia } from 'pinia'
 
 import App from './App.vue'
 import router from './router'
+import { useAuthStore } from './stores/auth.ts'
 
 const app = createApp(App)
 
@@ -22,4 +23,7 @@ async function confirmServerConnection() {
 
 confirmServerConnection()
 
-app.mount('#app')
+const auth = useAuthStore()
+auth.tryRestoreSession().finally(() => {
+  app.mount('#app')
+})
