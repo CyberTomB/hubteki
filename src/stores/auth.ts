@@ -31,7 +31,8 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function logout() {
     try {
-      await api.post('/logout')
+      const res = await api.post('/logout')
+      console.log('Received from logout: ', res)
     } finally {
       clearSession()
     }
