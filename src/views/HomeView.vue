@@ -3,14 +3,9 @@ import api from '@/api/client'
 import LoginForm from '@/components/LoginForm.vue'
 import RegisterForm from '@/components/RegisterForm.vue'
 import { useAuthStore } from '@/stores/auth'
-import { onMounted, ref } from 'vue'
+import { onMounted, reactive, ref, type Ref } from 'vue'
 
-const socket = new WebSocket('ws://localhost:3000')
-onMounted(() => {
-  socket.onopen = (event) => {
-    console.log('socket opened')
-  }
-})
+const socket: Ref<WebSocket | null> = ref(null)
 
 const auth = useAuthStore()
 
@@ -20,8 +15,12 @@ function toggleRegister() {
   register.value = !register.value
 }
 
+async function openRoom() {
+  socket.value = new WebSocket('ws://localhost:3000/ws')
+}
+
 async function sendMessage() {
-  socket.send('test')
+  socket.value?.send('test')
 }
 </script>
 
@@ -36,5 +35,5 @@ async function sendMessage() {
       <button @click="toggleRegister">{{ register ? 'Sign in' : 'Sign up' }}</button>
     </p>
   </div>
-  <button v-else @click="sendMessage">Create Room</button>
+  <button v-else @click="openRoom">Create Room</button>
 </template>
