@@ -28,8 +28,6 @@ async function handleSubmit() {
 
   isSubmitting.value = true
   try {
-    // register
-    console.log('registering')
     await auth.register({ email: email.value, password: password.value, name: name.value })
     router.push({ name: 'home' })
   } catch (error: any) {

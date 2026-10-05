@@ -16,9 +16,7 @@ async function handleSubmit() {
   errorMessage.value = ''
   isSubmitting.value = true
   try {
-    // login
-    console.log('redirecting', { e: errorMessage.value, s: isSubmitting.value })
-    await auth.login({ email: email.value, password: password.value })
+    const res = await auth.login({ email: email.value, password: password.value })
     router.push((route.query.redirect as string) || { name: 'home' })
   } catch (error: any) {
     errorMessage.value = error.response?.data?.message || 'Something went wrong, try again.'

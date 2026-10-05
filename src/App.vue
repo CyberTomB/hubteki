@@ -1,16 +1,7 @@
-<script setup lang="ts">
-import { onMounted } from 'vue'
-import { RouterView } from 'vue-router'
-
-onMounted(() => {
-  console.log('app mounted')
-})
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <div id="app">
-    <RouterView></RouterView>
-  </div>
+  <RouterView></RouterView>
 </template>
 
 <style scoped></style>

@@ -8,8 +8,8 @@ export const useAuthStore = defineStore('auth', () => {
 
   const isAuthenticated = computed(() => accessToken.value !== null)
 
-  function setSession(token: string, userData: string) {
-    accessToken.value = token
+  function setSession(access: string, userData: string) {
+    accessToken.value = access
     user.value = userData
   }
 
@@ -24,7 +24,6 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function login(payload: { email: string; password: string }) {
-    console.log('sending request to server: ', payload)
     const { data } = await api.post('/login', payload)
     setSession(data.accessToken, data.user)
   }

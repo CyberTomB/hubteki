@@ -8,22 +8,11 @@ import { useAuthStore } from './stores/auth.ts'
 const app = createApp(App)
 
 app.use(createPinia())
-app.use(router)
-
-// Confirming server connection
-
-async function confirmServerConnection() {
-  console.log('checking for server...')
-  fetch('http://localhost:3000/')
-    .then((res) => res.json())
-    .then((data) => {
-      console.log('Server connection established', data)
-    })
-}
-
-confirmServerConnection()
-
 const auth = useAuthStore()
+
 auth.tryRestoreSession().finally(() => {
+  console.log('[main] restore session attempt done')
+  // NOTE - Afaik, router needs to be called after the session restoration in order to route properly
+  app.use(router)
   app.mount('#app')
 })

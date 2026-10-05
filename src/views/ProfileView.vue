@@ -4,8 +4,12 @@ import { useAuthStore } from '@/stores/auth'
 import { onMounted } from 'vue'
 
 const auth = useAuthStore()
+
+onMounted(async () => {
+  const { data } = await api.get('/')
+})
 </script>
 
 <template>
-  <h1>Welcome to Hubteki!</h1>
+  <p>You are now logged in: {{ auth.user }}</p>
 </template>
