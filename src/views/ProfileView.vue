@@ -11,5 +11,5 @@ onMounted(async () => {
 </script>
 
 <template>
-  <p>You are now logged in: {{ auth.user }}</p>
+  <p>You are now logged in: {{ auth.user?.name }}</p>
 </template>
