@@ -16,7 +16,20 @@ function toggleRegister() {
 }
 
 async function openRoom() {
-  socket.value = new WebSocket('ws://localhost:3000/ws')
+  socket.value = new WebSocket(
+    `ws://localhost:3000/ws?token=${encodeURIComponent(auth.accessToken!)}`,
+  )
+
+  if (socket.value) {
+    socket.value.onerror = async () => {
+      console.log('handling retry')
+      await auth.tryRestoreSession()
+    }
+
+    socket.value.onopen = (data) => {
+      console.log('[ws onopen]', data)
+    }
+  }
 }
 
 async function sendMessage() {
