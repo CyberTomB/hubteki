@@ -21,9 +21,10 @@ async function openRoom() {
   )
 
   if (socket.value) {
-    socket.value.onerror = async () => {
-      console.log('handling retry')
+    socket.value.onerror = async (data) => {
+      console.log('handling retry', data)
       await auth.tryRestoreSession()
+      socket.value?.OPEN
     }
 
     socket.value.onopen = (data) => {
