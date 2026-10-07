@@ -1,17 +1,18 @@
 <script setup lang="ts">
-import { socket } from './socket'
-import { useConnectionStore } from './stores/connection'
-import { useItemStore } from './stores/item'
+import { onMounted } from 'vue'
+import { socket, state } from './socket'
 
-const itemStore = useItemStore()
-const connectionStore = useConnectionStore()
+// socket.off()
+// socket.connect()
 
-socket.off()
-itemStore.bindEvents()
-connectionStore.bindEvents()
+onMounted(() => {
+  console.log('mounted, trying to connect: ')
+  socket.connect()
+})
 </script>
 
 <template>
+  <p>{{ `Socket active: ${socket.active} and is connected: ${state.connected}` }}</p>
   <nav>
     <RouterLink to="/">Home</RouterLink>
     <RouterLink to="/profile">Profile</RouterLink>
