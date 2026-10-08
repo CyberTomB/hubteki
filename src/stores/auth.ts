@@ -12,6 +12,7 @@ export const useAuthStore = defineStore('auth', () => {
   const isAuthenticated = computed(() => accessToken.value !== null)
 
   function setSession(access: string, userData: User) {
+    console.log('setting session', access, userData)
     accessToken.value = access
     user.value = userData
   }

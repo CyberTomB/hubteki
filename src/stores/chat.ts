@@ -30,6 +30,11 @@ export const useChatStore = defineStore('chat', () => {
   }
 
   function sendChat(to: string, from: string, content: string) {
+    console.log('[chat store] message: ', {
+      to,
+      from,
+      content,
+    })
     socket.emit('chat', {
       to,
       from,

@@ -1,11 +1,11 @@
 export default class User {
   name: string
   email: string
-  readonly feId: string
+  id: string
 
-  constructor({ name, email }: User) {
+  constructor({ name, email, id }: User) {
     this.name = name
     this.email = email
-    this.feId = crypto.randomUUID()
+    this.id = id
   }
 }

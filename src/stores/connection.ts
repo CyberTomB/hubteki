@@ -62,6 +62,13 @@ export const useConnectionStore = defineStore('connection', () => {
     socket.on('userDisconnected', (user: SocketUser) => {
       userList.value.delete(user.sessionId)
     })
+
+    socket.on('chat', ({ from, content }) => {
+      console.log('[socket] received chat event: ', {
+        from,
+        content,
+      })
+    })
   }
 
   function connect() {
@@ -74,13 +81,13 @@ export const useConnectionStore = defineStore('connection', () => {
       socket.auth = { sessionId }
     }
 
-    console.log('[socket] connecting...')
+    console.log('[socket] connecting...', user)
     if (!user) {
       console.error('[socket] Unable to open connection: no user')
       return
     }
 
-    socket.auth = { ...socket.auth, username: user.email, id: user.feId }
+    socket.auth = { ...socket.auth, userId: user.id }
     socket.connect()
     bindEvents()
   }
