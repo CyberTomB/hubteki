@@ -38,8 +38,11 @@ function openChat(username: string) {
   })
 }
 
-function createRoom() {
+async function createRoom() {
+  // FIXME - Error handling + ensuring auth
   console.log('create room')
+  const res = await api.post('/room', { userId: auth.user.id })
+  console.log('room: ', res)
 }
 
 const { userList } = storeToRefs(useConnectionStore())
