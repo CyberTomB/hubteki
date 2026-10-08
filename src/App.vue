@@ -2,13 +2,7 @@
 import { onMounted } from 'vue'
 import { socket, state } from './socket'
 
-// socket.off()
-// socket.connect()
-
-onMounted(() => {
-  console.log('mounted, trying to connect: ')
-  socket.connect()
-})
+onMounted(() => {})
 </script>
 
 <template>

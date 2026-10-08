@@ -7,7 +7,11 @@ export const state = reactive({
 
 const URL = 'http://localhost:3000/'
 
-export const socket = io(URL)
+export const socket = io(URL, { autoConnect: false })
+
+socket.onAny((event, ...args) => {
+  console.log('[SOCKET]: ', { event: event, args })
+})
 
 socket.on('connect_error', (err) => {
   // the reason of the error, for example "xhr poll error"
