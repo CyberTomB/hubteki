@@ -2,6 +2,7 @@ import api from '@/api/client'
 import type User from '@/models/user'
 import { defineStore } from 'pinia'
 import { computed, ref, type Ref } from 'vue'
+import { useConnectionStore } from './connection'
 
 export const useAuthStore = defineStore('auth', () => {
   const accessToken: Ref<null | string> = ref(null)

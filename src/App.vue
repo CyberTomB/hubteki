@@ -1,12 +1,21 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import { socket, state } from './socket'
+import { socket } from './socket'
+import { useConnectionStore } from './stores/connection'
+import { useAuthStore } from './stores/auth'
 
-onMounted(() => {})
+const auth = useAuthStore()
+const connection = useConnectionStore()
+onMounted(() => {
+  socket.off()
+
+  console.log('app mounted, attempting to connect: ')
+  connection.connect()
+})
 </script>
 
 <template>
-  <p>{{ `Socket active: ${socket.active} and is connected: ${state.connected}` }}</p>
+  <p>{{ `Logged in as ${auth.user?.name} and is connected: ${connection.isConnected}` }}</p>
   <nav>
     <RouterLink to="/">Home</RouterLink>
     <RouterLink to="/profile">Profile</RouterLink>
