@@ -8,6 +8,7 @@ export type SocketUser = {
   userId: string
   username: string
   self?: boolean
+  sessionId: string
 }
 
 export const useConnectionStore = defineStore('connection', () => {
@@ -31,6 +32,7 @@ export const useConnectionStore = defineStore('connection', () => {
     socket.on('disconnect', () => {
       console.log('[socket]disconnected from the server')
       isConnected.value = false
+      socket.disconnect()
     })
 
     socket.on('connect_error', (err) => {
@@ -49,16 +51,16 @@ export const useConnectionStore = defineStore('connection', () => {
       })
 
       sorted.forEach((u: SocketUser) => {
-        userList.value.set(u.userId, u.username)
+        userList.value.set(u.sessionId, u.username)
       })
     })
 
     socket.on('userConnected', (user: SocketUser) => {
-      userList.value.set(user.userId, user.username)
+      userList.value.set(user.sessionId, user.username)
     })
 
     socket.on('userDisconnected', (user: SocketUser) => {
-      userList.value.delete(user.userId)
+      userList.value.delete(user.sessionId)
     })
   }
 
@@ -78,7 +80,7 @@ export const useConnectionStore = defineStore('connection', () => {
       return
     }
 
-    socket.auth = { username: user.email, id: user.feId }
+    socket.auth = { ...socket.auth, username: user.email, id: user.feId }
     socket.connect()
     bindEvents()
   }

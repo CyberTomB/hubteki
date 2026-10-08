@@ -7,6 +7,7 @@ import { useConnectionStore } from './connection'
 export const useAuthStore = defineStore('auth', () => {
   const accessToken: Ref<null | string> = ref(null)
   const user: Ref<null | User> = ref(null)
+  const connection = useConnectionStore()
 
   const isAuthenticated = computed(() => accessToken.value !== null)
 
@@ -28,6 +29,8 @@ export const useAuthStore = defineStore('auth', () => {
   async function login(payload: { email: string; password: string }) {
     const { data } = await api.post('/login', payload)
     setSession(data.accessToken, data.user)
+    console.log('[refresh] attempting to reconnect to socket')
+    connection.connect()
   }
 
   async function logout() {
@@ -43,6 +46,8 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       const { data } = await api.post('/refresh')
       setSession(data.accessToken, data.user)
+      console.log('[refresh] attempting to reconnect to socket')
+      connection.connect()
     } catch {
       clearSession()
     }
