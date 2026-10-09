@@ -2,6 +2,14 @@
 
 This repository is currently a WIP. This project is in no way associated with Earthborn Games. This is an unofficial fan-created implementation of the upcoming card game Hubworld: Aidalon. Art, rules text, and all copyrighted materials belong to their rights holders.
 
+This project is built with zero code contributions or development by LLMs or Generative AI. If you would like to help contribute to this project, reach out to me at cyberdack@pm.me or directly on github. I'd love to have the support!
+
+You'll have to forgive my noobishness while you're here.
+
+![Human-made logo by HINOKO](2_horizontal_text_with_hand.png)
+
+(The above logo and more are available at https://hinokodo.itch.io/human-made)
+
 ## Recommended IDE Setup
 
 [VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
