@@ -1,5 +1,9 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import GameGrid from '@/components/GameGrid.vue'
+</script>
 
 <template>
-  <p>Hello Werld</p>
+  <GameGrid></GameGrid>
 </template>
+
+<style scoped></style>

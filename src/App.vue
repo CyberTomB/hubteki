@@ -9,7 +9,7 @@
   <RouterView></RouterView>
 </template>
 
-<style scoped>
+<style>
 nav {
   display: flex;
   width: 100%;
@@ -18,5 +18,9 @@ nav {
 
 .nav-link {
   border: 1px solid green;
+}
+
+body {
+  height: 98vh;
 }
 </style>
