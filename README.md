@@ -6,7 +6,7 @@ This project is built with zero code contributions or development by LLMs or Gen
 
 You'll have to forgive my noobishness while you're here.
 
-![Human-made logo by HINOKO](2_horizontal_text_with_hand.png)
+![Human-made logo by HINOKO](2_horizontal_text_with_hand.svg)
 
 (The above logo and more are available at https://hinokodo.itch.io/human-made)
 
