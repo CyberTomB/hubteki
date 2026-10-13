@@ -2,10 +2,21 @@
 
 <template>
   <nav>
-    <RouterLink to="/">Home</RouterLink>
-    <RouterLink to="/profile">Profile</RouterLink>
+    <RouterLink class="nav-link" to="/">Home</RouterLink>
+    <RouterLink class="nav-link" to="/profile">Profile</RouterLink>
+    <RouterLink class="nav-link" to="/game">Game</RouterLink>
   </nav>
   <RouterView></RouterView>
 </template>
 
-<style scoped></style>
+<style scoped>
+nav {
+  display: flex;
+  width: 100%;
+  border: 1px solid purple;
+}
+
+.nav-link {
+  border: 1px solid green;
+}
+</style>

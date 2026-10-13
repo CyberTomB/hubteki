@@ -1,4 +1,5 @@
 import { useAuthStore } from '@/stores/auth'
+import GameTableView from '@/views/GameTableView.vue'
 import HomeView from '@/views/HomeView.vue'
 import LoginView from '@/views/LoginView.vue'
 import ProfileView from '@/views/ProfileView.vue'
@@ -12,6 +13,7 @@ const router = createRouter({
     { path: '/login', name: 'login', component: LoginView, meta: { guestOnly: true } },
     { path: '/register', name: 'register', component: RegisterView, meta: { guestOnly: true } },
     { path: '/profile', name: 'profile', component: ProfileView, meta: { requiresAuth: true } },
+    { path: '/game', name: 'game', component: GameTableView, meta: { requiresAuth: false } },
   ],
 })
 
