@@ -1,8 +1,9 @@
 import { socket } from '@/socket'
-import { defineStore } from 'pinia'
+import { defineStore, storeToRefs } from 'pinia'
 import { computed, ref, type Ref } from 'vue'
 import { useAuthStore } from './auth'
 import type { Socket } from 'socket.io-client'
+import type User from '@/models/user'
 
 export type SocketUser = {
   userId: string
@@ -15,10 +16,12 @@ export const useConnectionStore = defineStore('connection', () => {
   const URL = 'http://localhost:3000/'
   const isConnected = ref(false)
   const userList: Ref<Map<string, string>> = ref(new Map())
+  const auth = useAuthStore()
 
   function bindEvents() {
     socket.on('connect', () => {
       console.log('[socket]connected to the socket server')
+      socket.auth = { username: auth.user?.name ?? 'failed' }
       isConnected.value = true
     })
 
@@ -71,10 +74,7 @@ export const useConnectionStore = defineStore('connection', () => {
     })
   }
 
-  function connect() {
-    const auth = useAuthStore()
-    const user = auth.isAuthenticated ? auth.user : null
-
+  async function connect(user: User) {
     const sessionId = localStorage.getItem('sessionId')
     if (sessionId) {
       console.log('[socket] found session ID: ', sessionId)
@@ -82,14 +82,16 @@ export const useConnectionStore = defineStore('connection', () => {
     }
 
     console.log('[socket] connecting...', user)
+
     if (!user) {
       console.error('[socket] Unable to open connection: no user')
       return
     }
 
     socket.auth = { ...socket.auth, userId: user.id }
-    socket.connect()
+    console.log('set auth: ', socket.auth)
     bindEvents()
+    await socket.connect()
   }
 
   return {

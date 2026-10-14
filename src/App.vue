@@ -6,12 +6,6 @@ import { useAuthStore } from './stores/auth'
 
 const auth = useAuthStore()
 const connection = useConnectionStore()
-onMounted(() => {
-  console.log('app mounted, attempting to connect: ')
-  socket.off()
-
-  connection.connect()
-})
 </script>
 
 <template>

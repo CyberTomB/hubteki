@@ -40,8 +40,12 @@ function openChat(username: string) {
 
 async function createRoom() {
   // FIXME - Error handling + ensuring auth
-  console.log('create room')
-  const res = await api.post('/room', { userId: auth.user.id })
+  console.log('creating room...', { user: { ...auth.user } })
+  const res = await socket.emit('createRoom', {
+    user: {
+      ...auth.user,
+    },
+  })
   console.log('room: ', res)
 }
 

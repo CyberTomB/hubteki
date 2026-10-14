@@ -31,7 +31,7 @@ export const useAuthStore = defineStore('auth', () => {
     const { data } = await api.post('/login', payload)
     setSession(data.accessToken, data.user)
     console.log('[refresh] attempting to reconnect to socket')
-    connection.connect()
+    connection.connect(data.user)
   }
 
   async function logout() {
@@ -44,11 +44,12 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function tryRestoreSession() {
+    console.log('[AUTH] restoring session')
     try {
       const { data } = await api.post('/refresh')
       setSession(data.accessToken, data.user)
-      console.log('[refresh] attempting to reconnect to socket')
-      connection.connect()
+      console.log('[AUTH][refresh] attempting to reconnect to socket')
+      await connection.connect(data.user)
     } catch {
       clearSession()
     }
