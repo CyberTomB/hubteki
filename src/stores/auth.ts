@@ -2,14 +2,17 @@ import api from '@/api/client'
 import type User from '@/models/user'
 import { defineStore } from 'pinia'
 import { computed, ref, type Ref } from 'vue'
+import { useConnectionStore } from './connection'
 
 export const useAuthStore = defineStore('auth', () => {
   const accessToken: Ref<null | string> = ref(null)
   const user: Ref<null | User> = ref(null)
+  const connection = useConnectionStore()
 
   const isAuthenticated = computed(() => accessToken.value !== null)
 
   function setSession(access: string, userData: User) {
+    console.log('setting session', access, userData)
     accessToken.value = access
     user.value = userData
   }
@@ -27,6 +30,8 @@ export const useAuthStore = defineStore('auth', () => {
   async function login(payload: { email: string; password: string }) {
     const { data } = await api.post('/login', payload)
     setSession(data.accessToken, data.user)
+    console.log('[refresh] attempting to reconnect to socket')
+    connection.connect(data.user)
   }
 
   async function logout() {
@@ -39,9 +44,12 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function tryRestoreSession() {
+    console.log('[AUTH] restoring session')
     try {
       const { data } = await api.post('/refresh')
       setSession(data.accessToken, data.user)
+      console.log('[AUTH][refresh] attempting to reconnect to socket')
+      await connection.connect(data.user)
     } catch {
       clearSession()
     }
