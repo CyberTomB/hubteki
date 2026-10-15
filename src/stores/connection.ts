@@ -16,20 +16,19 @@ export const useConnectionStore = defineStore('connection', () => {
   const URL = 'http://localhost:3000/'
   const isConnected = ref(false)
   const userList: Ref<Map<string, string>> = ref(new Map())
-  const auth = useAuthStore()
+  const authStore = useAuthStore()
 
   function bindEvents() {
     socket.on('connect', () => {
       console.log('[socket]connected to the socket server')
-      socket.auth = { username: auth.user?.name ?? 'failed' }
+      socket.auth = { username: authStore.user?.name ?? 'failed' }
       isConnected.value = true
     })
 
-    socket.on('session', ({ sessionId, username }) => {
-      console.log('received session info: ', sessionId, username)
-      socket.auth = { sessionId: sessionId }
+    socket.on('session', ({ sessionId }) => {
+      console.log('received session info: ', sessionId)
+      socket.auth = { ...socket.auth, sessionId: sessionId }
       localStorage.setItem('sessionId', sessionId)
-      socket.auth.username = username
     })
 
     socket.on('disconnect', () => {
@@ -76,8 +75,9 @@ export const useConnectionStore = defineStore('connection', () => {
 
   async function connect(user: User) {
     const sessionId = localStorage.getItem('sessionId')
+    console.log('[socket] retrieved this from localStorage: ', sessionId)
     if (sessionId) {
-      console.log('[socket] found session ID: ', sessionId)
+      console.log('[socket] connecting with session ID: ', sessionId)
       socket.auth = { sessionId }
     }
 
