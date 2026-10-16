@@ -7,7 +7,7 @@ export type SocketUser = {
   userId: string
   username: string
   self?: boolean
-  sessionId: string
+  connectionId: string
 }
 
 export const useConnectionStore = defineStore('connection', () => {
@@ -34,33 +34,21 @@ export const useConnectionStore = defineStore('connection', () => {
       console.error('Something went wrong: ', err.message)
     })
 
-    socket.on('users', (users) => {
-      console.log('[socket]: received user list: ', users)
-      const sorted = users.sort((a: SocketUser, b: SocketUser) => {
-        if (a.self) return -1
-        if (b.self) return 1
-        if (a.username < b.username) return -1
-        return a.username > b.username ? 1 : 0
-      })
-
-      sorted.forEach((u: SocketUser) => {
-        userList.value.set(u.sessionId, u.username)
+    socket.on('users', (users: SocketUser[]) => {
+      console.log('[socket] updating online users: ', users)
+      users.forEach((u) => {
+        userList.value.set(u.connectionId, u.username)
       })
     })
 
     socket.on('userConnected', (user: SocketUser) => {
-      userList.value.set(user.sessionId, user.username)
+      console.log('[socket] user connected: ', user)
+      userList.value.set(user.connectionId, user.username)
     })
 
     socket.on('userDisconnected', (user: SocketUser) => {
-      userList.value.delete(user.sessionId)
-    })
-
-    socket.on('chat', ({ from, content }) => {
-      console.log('[socket] received chat event: ', {
-        from,
-        content,
-      })
+      console.log('[socket] user disconnected: ', user)
+      userList.value.delete(user.connectionId)
     })
   }
 

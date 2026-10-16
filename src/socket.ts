@@ -1,5 +1,4 @@
 import { io } from 'socket.io-client'
-import { reactive } from 'vue'
 
 const URL = 'http://localhost:3000/'
 
