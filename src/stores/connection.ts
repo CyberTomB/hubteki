@@ -73,23 +73,8 @@ export const useConnectionStore = defineStore('connection', () => {
     })
   }
 
-  async function connect(user: User) {
-    const sessionId = localStorage.getItem('sessionId')
-    console.log('[socket] retrieved this from localStorage: ', sessionId)
-    if (sessionId) {
-      console.log('[socket] connecting with session ID: ', sessionId)
-      socket.auth = { sessionId }
-    }
-
-    console.log('[socket] connecting...', user)
-
-    if (!user) {
-      console.error('[socket] Unable to open connection: no user')
-      return
-    }
-
-    socket.auth = { ...socket.auth, userId: user.id }
-    console.log('set auth: ', socket.auth)
+  async function connect() {
+    console.log('[socket] attempting to connect')
     bindEvents()
     await socket.connect()
   }

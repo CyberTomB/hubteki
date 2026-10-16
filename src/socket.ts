@@ -3,7 +3,7 @@ import { reactive } from 'vue'
 
 const URL = 'http://localhost:3000/'
 
-export const socket = io(URL, { autoConnect: false })
+export const socket = io(URL, { autoConnect: false, withCredentials: true })
 
 socket.onAny((event, ...args) => {
   console.log('[SOCKET]: ', { event: event, args })
