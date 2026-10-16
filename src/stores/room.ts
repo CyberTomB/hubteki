@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
 import { ref, type Ref } from 'vue'
-import { useConnectionStore } from './connection'
 import { socket } from '@/api/socket'
 
 export interface MessageData {
@@ -9,7 +8,7 @@ export interface MessageData {
   id?: number
 }
 
-export const useChatStore = defineStore('chat', () => {
+export const useRoomStore = defineStore('room', () => {
   const rooms: Ref<Map<string, MessageData[]>> = ref(new Map())
   //   const connection = useConnectionStore();
 

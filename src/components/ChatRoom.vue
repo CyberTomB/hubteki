@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import type User from '@/models/user'
-import { useChatStore, type MessageData } from '@/stores/chat'
+import { useRoomStore, type MessageData } from '@/stores/room'
 import { storeToRefs } from 'pinia'
 import { computed, ref } from 'vue'
 
-const chat = useChatStore()
+const chat = useRoomStore()
 const { rooms } = storeToRefs(chat)
 
 const history = computed(() => rooms.value.get(props.target))

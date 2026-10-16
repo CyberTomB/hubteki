@@ -12,12 +12,12 @@ export type SocketUser = {
 
 export const useConnectionStore = defineStore('connection', () => {
   const isConnected = ref(false)
-  const userList: Ref<Map<string, string>> = ref(new Map())
+  const lobby: Ref<Map<string, string>> = ref(new Map())
   const authStore = useAuthStore()
 
   function bindEvents() {
     socket.on('connect', () => {
-      console.log('[socket]connected to the socket server')
+      console.log('[socket] connected to the socket server')
       isConnected.value = true
     })
 
@@ -37,18 +37,18 @@ export const useConnectionStore = defineStore('connection', () => {
     socket.on('users', (users: SocketUser[]) => {
       console.log('[socket] updating online users: ', users)
       users.forEach((u) => {
-        userList.value.set(u.connectionId, u.username)
+        lobby.value.set(u.connectionId, u.username)
       })
     })
 
     socket.on('userConnected', (user: SocketUser) => {
       console.log('[socket] user connected: ', user)
-      userList.value.set(user.connectionId, user.username)
+      lobby.value.set(user.connectionId, user.username)
     })
 
     socket.on('userDisconnected', (user: SocketUser) => {
       console.log('[socket] user disconnected: ', user)
-      userList.value.delete(user.connectionId)
+      lobby.value.delete(user.connectionId)
     })
   }
 
@@ -63,6 +63,6 @@ export const useConnectionStore = defineStore('connection', () => {
     isConnected,
     connect,
     bindEvents,
-    userList,
+    lobby,
   }
 })

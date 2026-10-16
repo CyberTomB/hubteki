@@ -5,17 +5,19 @@ import LoginForm from '@/components/LoginForm.vue'
 import RegisterForm from '@/components/RegisterForm.vue'
 import { socket } from '@/api/socket'
 import { useAuthStore } from '@/stores/auth'
-import { useChatStore, type MessageData } from '@/stores/chat'
+import { useRoomStore, type MessageData } from '@/stores/room'
 import { useConnectionStore } from '@/stores/connection'
 import { storeToRefs } from 'pinia'
 import { ref, type Ref } from 'vue'
 
 const auth = useAuthStore()
+const { lobby } = storeToRefs(useConnectionStore())
+
+const chat = useRoomStore()
+const { rooms } = storeToRefs(chat)
+
 const register = ref(false)
 
-const chat = useChatStore()
-
-const { rooms } = storeToRefs(chat)
 const chatOpen = ref(false)
 const chatter = ref('')
 const history: Ref<MessageData[]> = ref([])
@@ -24,32 +26,7 @@ function toggleRegister() {
   register.value = !register.value
 }
 
-function openChat(username: string) {
-  console.log('open chat')
-  chatOpen.value = true
-  chatter.value = username
-  history.value = rooms.value.get(username) ?? []
-  chat.addRoom(username)
-  chat.joinRoom(username)
-  console.log('updating?')
-  chat.update(username, {
-    user: auth.user?.email ?? '',
-    message: 'Hello werld',
-  })
-}
-
-async function createRoom() {
-  // FIXME - Error handling + ensuring auth
-  console.log('creating room...', { user: { ...auth.user } })
-  const res = await socket.emit('createRoom', {
-    user: {
-      ...auth.user,
-    },
-  })
-  console.log('room: ', res)
-}
-
-const { userList } = storeToRefs(useConnectionStore())
+async function createRoom() {}
 </script>
 
 <template>
@@ -69,7 +46,7 @@ const { userList } = storeToRefs(useConnectionStore())
   </div>
   <div id="user-list" v-if="auth.isAuthenticated">
     <h2>Online Users:</h2>
-    <li v-for="[k, v] of userList" :key="k">{{ v }} <button @click="openChat(v)">Chat</button></li>
+    <li v-for="[k, v] of lobby" :key="k">{{ v }}</li>
   </div>
 
   <ChatRoom v-if="chatOpen" :target="chatter" :user="auth.user!"> </ChatRoom>
