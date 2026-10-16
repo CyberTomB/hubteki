@@ -1,9 +1,7 @@
 import { socket } from '@/socket'
-import { defineStore, storeToRefs } from 'pinia'
-import { computed, ref, type Ref } from 'vue'
+import { defineStore } from 'pinia'
+import { ref, type Ref } from 'vue'
 import { useAuthStore } from './auth'
-import type { Socket } from 'socket.io-client'
-import type User from '@/models/user'
 
 export type SocketUser = {
   userId: string
@@ -13,7 +11,6 @@ export type SocketUser = {
 }
 
 export const useConnectionStore = defineStore('connection', () => {
-  const URL = 'http://localhost:3000/'
   const isConnected = ref(false)
   const userList: Ref<Map<string, string>> = ref(new Map())
   const authStore = useAuthStore()
@@ -21,18 +18,11 @@ export const useConnectionStore = defineStore('connection', () => {
   function bindEvents() {
     socket.on('connect', () => {
       console.log('[socket]connected to the socket server')
-      socket.auth = { username: authStore.user?.name ?? 'failed' }
       isConnected.value = true
     })
 
-    socket.on('session', ({ sessionId }) => {
-      console.log('received session info: ', sessionId)
-      socket.auth = { ...socket.auth, sessionId: sessionId }
-      localStorage.setItem('sessionId', sessionId)
-    })
-
     socket.on('disconnect', () => {
-      console.log('[socket]disconnected from the server')
+      console.log('[socket] disconnected from the server')
       isConnected.value = false
       socket.disconnect()
     })
@@ -41,6 +31,7 @@ export const useConnectionStore = defineStore('connection', () => {
       if (err.message === 'INVALID USERNAME') {
         console.error('[socket] invalid username')
       }
+      console.error('Something went wrong: ', err.message)
     })
 
     socket.on('users', (users) => {
