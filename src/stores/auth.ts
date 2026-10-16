@@ -5,43 +5,40 @@ import { computed, ref, type Ref } from 'vue'
 import { useConnectionStore } from './connection'
 
 export const useAuthStore = defineStore('auth', () => {
-  const accessToken: Ref<null | string> = ref(null)
   const user: Ref<null | User> = ref(null)
   const connection = useConnectionStore()
 
-  const isAuthenticated = computed(() => accessToken.value !== null)
+  const isAuthenticated = computed(() => user.value !== null)
 
-  function setSession(access: string, userData: User) {
-    console.log('setting session', access, userData)
-    accessToken.value = access
+  function setSession(userData: User) {
+    console.log('setting session', userData)
     user.value = userData
   }
 
   function clearSession() {
-    accessToken.value = null
     user.value = null
   }
 
   async function register(payload: { name: string; email: string; password: string }) {
     const { data, status } = await api.post('/register', payload)
-    console.log('[register]: ', data.message)
+    console.log('[register]: ', data)
     if (status === 200) {
       console.log('now login you fool')
-      // TODO implement redirect?
+      // TODO implement prompt to login
     }
   }
 
   async function login(payload: { email: string; password: string }) {
-    const res = await api.post('/login', payload)
-    console.log('[login] received this response: ', res)
-    setSession(res.data.accessToken, res.data.user)
-    console.log('[refresh] attempting to reconnect to socket')
+    const { data } = await api.post('/login', payload)
+    console.log('[login] received this response: ', data)
+    setSession(data)
     connection.connect()
   }
 
   async function logout() {
     try {
       const res = await api.post('/logout')
+      console.log('logged out', res)
     } finally {
       clearSession()
     }
@@ -51,8 +48,7 @@ export const useAuthStore = defineStore('auth', () => {
     console.log('[AUTH] restoring session')
     try {
       const { data } = await api.post('/refresh')
-      setSession(data.accessToken, data.user)
-      console.log('[AUTH][refresh] attempting to reconnect to socket')
+      setSession(data)
       await connection.connect()
     } catch (e) {
       console.log('Error:', e)
@@ -61,7 +57,6 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   return {
-    accessToken,
     user,
     isAuthenticated,
     register,
