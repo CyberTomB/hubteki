@@ -23,21 +23,25 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function register(payload: { name: string; email: string; password: string }) {
-    const { data } = await api.post('/register', payload)
-    setSession(data.accessToken, data.user)
+    const { data, status } = await api.post('/register', payload)
+    console.log('[register]: ', data.message)
+    if (status === 200) {
+      console.log('now login you fool')
+      // TODO implement redirect?
+    }
   }
 
   async function login(payload: { email: string; password: string }) {
-    const { data } = await api.post('/login', payload)
-    setSession(data.accessToken, data.user)
+    const res = await api.post('/login', payload)
+    console.log('[login] received this response: ', res)
+    setSession(res.data.accessToken, res.data.user)
     console.log('[refresh] attempting to reconnect to socket')
-    connection.connect(data.user)
+    connection.connect(res.data.user)
   }
 
   async function logout() {
     try {
       const res = await api.post('/logout')
-      console.log('Received from logout: ', res)
     } finally {
       clearSession()
     }
@@ -50,7 +54,8 @@ export const useAuthStore = defineStore('auth', () => {
       setSession(data.accessToken, data.user)
       console.log('[AUTH][refresh] attempting to reconnect to socket')
       await connection.connect(data.user)
-    } catch {
+    } catch (e) {
+      console.log('Error:', e)
       clearSession()
     }
   }

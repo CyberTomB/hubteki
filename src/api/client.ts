@@ -8,19 +8,20 @@ const api = axios.create({
 
 const SKIP_REFERESH = ['/login', '/register', '/refresh']
 
-api.interceptors.request.use((config) => {
-  const auth = useAuthStore()
-  if (auth.accessToken) {
-    config.headers.Authorization = `Bearer ${auth.accessToken}`
-  }
-  return config
-})
+// api.interceptors.request.use((config) => {
+//   const auth = useAuthStore()
+//   if (auth.accessToken) {
+//     config.headers.Authorization = `Bearer ${auth.accessToken}`
+//   }
+//   return config
+// })
 
 let refreshPromise = null
 
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
+    console.log('[api] Something went wrong: ', error.error)
     const { config, response } = error
     const shouldRetry =
       response?.status === 401 &&
@@ -37,7 +38,7 @@ api.interceptors.response.use(
     await refreshPromise
 
     if (!auth.accessToken) return Promise.reject(error)
-    config.headers.Authorzation = `Bearer ${auth.accessToken}`
+    // config.headers.Authorzation = `Bearer ${auth.accessToken}`
     return api(config)
   },
 )
