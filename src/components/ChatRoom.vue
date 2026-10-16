@@ -1,4 +1,5 @@
-<script setup lang="ts">
+<template></template>
+<!-- <script setup lang="ts">
 import type User from '@/models/user'
 import { useRoomStore, type MessageData } from '@/stores/room'
 import { storeToRefs } from 'pinia'
@@ -26,10 +27,10 @@ function newMessage() {
 <template>
   <div class="chat-box">
     <p>You are chatting with: {{ target }}</p>
-    <p v-for="msg in history"><span>{{ msg.user }}: </span>{{ msg.message }}</p>
+    <p v-for="msg in history"><span>{{ msg.username }}: </span>{{ msg.content }}</p>
     <form @submit.prevent="newMessage()">
         <input type="text" v-model=currentMessage></input>
         <button type="submit">Send</button>
     </form>
   </div>
-</template>
+</template> -->

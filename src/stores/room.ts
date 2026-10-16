@@ -1,65 +1,87 @@
 import { defineStore } from 'pinia'
 import { ref, type Ref } from 'vue'
 import { socket } from '@/api/socket'
-import { randomUUID } from 'crypto'
 
 export interface MessageData {
-  user: string
-  message: string
-  id?: number
+  username: string
+  content: string
+  position: number
+}
+
+export interface IRoom {
+  roomId: string
+  creator: string
+  messages: Array<MessageData>
+}
+
+class Room implements IRoom {
+  roomId: string
+  creator: string
+  messages: Array<MessageData>
+
+  constructor(userId: string) {
+    this.roomId = crypto.randomUUID()
+    this.creator = userId
+    this.messages = new Array()
+  }
+
+  private getMessageIncrement(): number {
+    return this.messages.length
+  }
+
+  public addMessage(content: string, from: string) {
+    const message: MessageData = {
+      content: content,
+      position: this.getMessageIncrement(),
+      username: from,
+    }
+    this.messages.push(message)
+  }
 }
 
 export const useRoomStore = defineStore('room', () => {
-  const rooms: Ref<Map<string, MessageData[]>> = ref(new Map())
+  const rooms: Ref<Map<string, Room>> = ref(new Map())
+  const activeRoom: Ref<null | Room> = ref(null)
 
   // TODO socket connect and subscribe to /rooms
 
-  function createRoom() {
+  function createRoom(username: string) {
     // TODO - Api request: POST /room
-    const roomId = randomUUID //NOTE - get from backend
-    rooms.value.set(roomId, [])
+    const newRoom = new Room(username) //NOTE - get from backend
+    rooms.value.set(newRoom.roomId, newRoom)
   }
 
-  function watchRoom(roomId: string) {
+  function joinRoom(roomId: string) {
     // TODO - Api request: GET /room/id?joinAs=spectator
     // Should receive message history as well
-    rooms.value.get(roomId)
+    const room = rooms.value.get(roomId)
+    if (!room) {
+      console.error('[room] unable to find room with roomId: ', roomId)
+      return
+    }
+
+    activeRoom.value = room
   }
 
   function joinGame(gameId: string) {
     // TODO - Rooms should have a 1:1 relationship with game
   }
 
-  function update(roomId: string, content: MessageData) {
-    const history = rooms.value.get(roomId)
-    if (!history) {
-      console.error('oopsie')
+  function sendMessage(envelope: { roomId: string; content: string; from: string }) {
+    const { roomId, content, from } = envelope
+    const room = rooms.value.get(roomId)
+    if (!room) {
+      console.error('[room] could not join that room')
+      return
     }
-    rooms.value.set(roomId, [...history!, content])
-  }
-
-  function sendChat(to: string, from: string, content: string) {
-    console.log('[chat store] message: ', {
-      to,
-      from,
-      content,
-    })
-    socket.emit('chat', {
-      to,
-      from,
-      content,
-    })
-    update(to, {
-      user: from,
-      message: content,
-    })
+    room.addMessage(content, from)
   }
 
   return {
     rooms,
-    addRoom: createRoom,
-    joinRoom: watchRoom,
-    update,
-    sendChat,
+    createRoom,
+    joinRoom,
+    sendMessage,
+    activeRoom,
   }
 })

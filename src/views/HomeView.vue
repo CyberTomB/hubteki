@@ -8,13 +8,16 @@ import { useAuthStore } from '@/stores/auth'
 import { useRoomStore, type MessageData } from '@/stores/room'
 import { useConnectionStore } from '@/stores/connection'
 import { storeToRefs } from 'pinia'
-import { ref, type Ref } from 'vue'
+import { computed, ref, type Ref } from 'vue'
 
 const auth = useAuthStore()
 const { lobby } = storeToRefs(useConnectionStore())
 
 const chat = useRoomStore()
-const { rooms } = storeToRefs(chat)
+const { rooms, activeRoom } = storeToRefs(chat)
+const roomHistory = computed(() => {
+  return activeRoom.value?.messages
+})
 
 const register = ref(false)
 
@@ -26,7 +29,24 @@ function toggleRegister() {
   register.value = !register.value
 }
 
-async function createRoom() {}
+async function createRoom() {
+  chat.createRoom(auth.user?.name ?? 'Fail')
+}
+
+
+const currentMessage = ref('');
+function newMessage() {
+  chat.sendMessage({
+    roomId: activeRoom.value?.roomId ?? "failID",
+    content: currentMessage.value,
+    from: auth.user?.name ?? "Fail"
+  })
+  currentMessage.value = '';
+}
+
+function joinRoom(roomId: string) {
+  chat.joinRoom(roomId);
+}
 </script>
 
 <template>
@@ -44,15 +64,29 @@ async function createRoom() {}
 
     <button v-else @click="createRoom">Create Room</button>
   </div>
+
+  
+  <!-- TODO: Componentalize -->
+
+  <div id="room-list" v-if="auth.isAuthenticated">
+    <h2>Available Rooms</h2>
+    <li v-for="[k, v] of rooms" :key="k">{{ v.roomId }}
+    <button @click="joinRoom(v.roomId)">Join</button></li>
+  </div>
+
+  <!-- TODO: Componentalize -->
+
+  <div id="active-room" v-if="activeRoom">
+    <p v-for="msg of roomHistory"><span>{{ msg.username }}: </span>{{ msg.content }}</p>
+    <br>
+    <form @submit.prevent="newMessage()">
+    <input type="text" v-model=currentMessage></input>
+    <button type="submit">Send</button>
+    </form>
+  </div>
+
   <div id="user-list" v-if="auth.isAuthenticated">
     <h2>Online Users:</h2>
     <li v-for="[k, v] of lobby" :key="k">{{ v }}</li>
-  </div>
-
-  <ChatRoom v-if="chatOpen" :target="chatter" :user="auth.user!"> </ChatRoom>
-
-  <br />
-  <div id="test">
-    <p v-for="n of history">{{ n }}</p>
   </div>
 </template>
