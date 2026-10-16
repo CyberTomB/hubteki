@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, type Ref } from 'vue'
 import { useConnectionStore } from './connection'
-import { socket } from '@/socket'
+import { socket } from '@/api/socket'
 
 export interface MessageData {
   user: string

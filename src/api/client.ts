@@ -8,14 +8,6 @@ const api = axios.create({
 
 const SKIP_REFERESH = ['/login', '/register', '/refresh']
 
-// api.interceptors.request.use((config) => {
-//   const auth = useAuthStore()
-//   if (auth.accessToken) {
-//     config.headers.Authorization = `Bearer ${auth.accessToken}`
-//   }
-//   return config
-// })
-
 let refreshPromise = null
 
 api.interceptors.response.use(
@@ -37,8 +29,6 @@ api.interceptors.response.use(
     })
     await refreshPromise
 
-    if (!auth.accessToken) return Promise.reject(error)
-    // config.headers.Authorzation = `Bearer ${auth.accessToken}`
     return api(config)
   },
 )

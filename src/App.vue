@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import { socket } from './socket'
+import { socket } from './api/socket'
 import { useConnectionStore } from './stores/connection'
 import { useAuthStore } from './stores/auth'
 import { storeToRefs } from 'pinia'
