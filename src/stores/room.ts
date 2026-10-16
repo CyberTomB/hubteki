@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, type Ref } from 'vue'
 import { socket } from '@/api/socket'
+import { randomUUID } from 'crypto'
 
 export interface MessageData {
   user: string
@@ -10,14 +11,23 @@ export interface MessageData {
 
 export const useRoomStore = defineStore('room', () => {
   const rooms: Ref<Map<string, MessageData[]>> = ref(new Map())
-  //   const connection = useConnectionStore();
 
-  function addRoom(username: string) {
-    rooms.value.set(username, [])
+  // TODO socket connect and subscribe to /rooms
+
+  function createRoom() {
+    // TODO - Api request: POST /room
+    const roomId = randomUUID //NOTE - get from backend
+    rooms.value.set(roomId, [])
   }
 
-  function joinRoom(id: string) {
-    rooms.value.get(id)
+  function watchRoom(roomId: string) {
+    // TODO - Api request: GET /room/id?joinAs=spectator
+    // Should receive message history as well
+    rooms.value.get(roomId)
+  }
+
+  function joinGame(gameId: string) {
+    // TODO - Rooms should have a 1:1 relationship with game
   }
 
   function update(roomId: string, content: MessageData) {
@@ -47,8 +57,8 @@ export const useRoomStore = defineStore('room', () => {
 
   return {
     rooms,
-    addRoom,
-    joinRoom,
+    addRoom: createRoom,
+    joinRoom: watchRoom,
     update,
     sendChat,
   }
